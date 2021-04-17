@@ -1,0 +1,597 @@
+{% extends 'resume/basic.html' %}
+{% block title %} Colleges {% endblock %}
+
+{% block js %}
+
+{% endblock %}
+
+{% block style %}
+<style>
+    .card-wrapper {
+        display: inline-block;
+        perspective: 1000px;
+    }
+
+    .card-wrapper .card-list {
+        position: relative;
+        cursor: pointer;
+        transition-duration: 0.6s;
+        transition-timing-function: ease-in-out;
+        transform-style: preserve-3d;
+        width: 700px;
+        margin-left: 76px;
+        height: 47px;
+    }
+
+    .card-wrapper .card-list .front,
+    .card-wrapper .card-list .back {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        transform: rotateX(0deg);
+    }
+
+    .card-wrapper .card-list .front {
+        z-index: 2;
+    }
+
+    .card-wrapper .card-list .back,
+    .card-wrapper.flip-right .card-list .back {
+        transform: rotateY(180deg);
+    }
+
+    .card-wrapper:hover .card-list,
+    .card-wrapper.flip-right:hover .card-list {
+        transform: rotateY(180deg);
+    }
+
+    .card-wrapper.flip-down .card-list .back {
+        transform: rotateX(-180deg);
+    }
+
+    .card-wrapper.flip-down:hover .card-list {
+        transform: rotateX(-180deg);
+    }
+
+    /* DEMO */
+    .card-wrapper,
+    .card-list {
+        margin: 5px;
+    }
+
+    .card-list .front,
+    .card-list .back {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #3300ec;
+        border-radius: 4px;
+    }
+
+    .card-list .front {
+        color: #548ffc;
+        background: #ffffff;
+        font-weight: 700;
+        font-size: 1rem;
+    }
+
+    .card-list .back {
+        font-size: 1.5rem;
+        color: #ffffff;
+        background: #00adfd;
+    }
+
+
+    .list {
+        /* border: 1px solid red; */
+        display: flex;
+        flex-direction: column;
+    }
+
+    .listImage {
+        /* border: 1px solid green; */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* University Card CSS */
+    @import url("https://fonts.googleapis.com/css?family=Cardo:400i|Rubik:400,700&display=swap");
+
+    :root {
+        --d: 700ms;
+        --e: cubic-bezier(0.19, 1, 0.22, 1);
+        --font-sans: "Rubik", sans-serif;
+        --font-serif: "Cardo", serif;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    /* html,
+    body {
+        height: 100%;
+    }
+
+    body {
+        display: grid;
+        place-items: center;
+    } */
+
+    .page-content {
+        display: grid;
+        grid-gap: 1rem;
+        padding: 1rem;
+        max-width: 1024px;
+        margin: 0 auto;
+        font-family: var(--font-sans);
+    }
+
+    @media (min-width: 600px) {
+        .page-content {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (min-width: 800px) {
+        .page-content {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    }
+
+    .card {
+        position: relative;
+        display: flex;
+        align-items: flex-end;
+        overflow: hidden;
+        padding: 1rem;
+        width: 100%;
+        text-align: center;
+        color: whitesmoke;
+        background-color: whitesmoke;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1), 0 2px 2px rgba(0, 0, 0, 0.1), 0 4px 4px rgba(0, 0, 0, 0.1), 0 8px 8px rgba(0, 0, 0, 0.1), 0 16px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    @media (min-width: 600px) {
+        .card {
+            height: 350px;
+        }
+    }
+
+    .card:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 110%;
+        background-size: cover;
+        background-position: 0 0;
+        transition: transform calc(var(--d) * 1.5) var(--e);
+        pointer-events: none;
+    }
+
+    .card:after {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 200%;
+        pointer-events: none;
+        background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.009) 11.7%, rgba(0, 0, 0, 0.034) 22.1%, rgba(0, 0, 0, 0.072) 31.2%, rgba(0, 0, 0, 0.123) 39.4%, rgba(0, 0, 0, 0.182) 46.6%, rgba(0, 0, 0, 0.249) 53.1%, rgba(0, 0, 0, 0.32) 58.9%, rgba(0, 0, 0, 0.394) 64.3%, rgba(0, 0, 0, 0.468) 69.3%, rgba(0, 0, 0, 0.54) 74.1%, rgba(0, 0, 0, 0.607) 78.8%, rgba(0, 0, 0, 0.668) 83.6%, rgba(0, 0, 0, 0.721) 88.7%, rgba(0, 0, 0, 0.762) 94.1%, rgba(0, 0, 0, 0.79) 100%);
+        transform: translateY(-50%);
+        transition: transform calc(var(--d) * 2) var(--e);
+    }
+
+    .card:nth-child(1):before {
+        background-image: url("/static/UOW.jpg");
+    }
+
+    .card:nth-child(2):before {
+        background-image: url("/static/UOT.jpg");
+    }
+
+    .card:nth-child(3):before {
+        background-image: url("/static/cambridge.jpg");
+    }
+
+    .card:nth-child(4):before {
+        background-image: url("/static/stanford.jpg");
+    }
+
+    .card:nth-child(5):before {
+        background-image: url("/static/oxford.jpg");
+    }
+
+    .card:nth-child(6):before {
+        background-image: url("/static/mit.jpg");
+    }
+
+    .card:nth-child(7):before {
+        background-image: url("/static/iitr.jpg");
+    }
+
+    .card:nth-child(8):before {
+        background-image: url("/static/UOM.jpg");
+    }
+
+    .content {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        padding: 1rem;
+        transition: transform var(--d) var(--e);
+        z-index: 1;
+    }
+
+    .content>*+* {
+        margin-top: 1rem;
+    }
+
+    .title {
+        font-size: 1.3rem;
+        font-weight: bold;
+        line-height: 1.2;
+    }
+
+    .copy {
+        font-family: var(--font-serif);
+        font-size: 1.125rem;
+        font-style: italic;
+        line-height: 1.35;
+    }
+
+    .btn {
+        cursor: pointer;
+        margin-top: 1.5rem;
+        padding: 0.75rem 1.5rem;
+        font-size: 0.65rem;
+        font-weight: bold;
+        letter-spacing: 0.025rem;
+        text-transform: uppercase;
+        color: white;
+        background-color: black;
+        border: none;
+    }
+
+    .btn:hover {
+        background-color: #0d0d0d;
+    }
+
+    .btn:focus {
+        outline: 1px dashed yellow;
+        outline-offset: 3px;
+    }
+
+    @media (hover: hover) and (min-width: 600px) {
+        .card:after {
+            transform: translateY(0);
+        }
+
+        .content {
+            transform: translateY(calc(100% - 4.5rem));
+        }
+
+        .content>*:not(.title) {
+            opacity: 0;
+            transform: translateY(1rem);
+            transition: transform var(--d) var(--e), opacity var(--d) var(--e);
+        }
+
+        .card:hover,
+        .card:focus-within {
+            align-items: center;
+        }
+
+        .card:hover:before,
+        .card:focus-within:before {
+            transform: translateY(-4%);
+        }
+
+        .card:hover:after,
+        .card:focus-within:after {
+            transform: translateY(-50%);
+        }
+
+        .card:hover .content,
+        .card:focus-within .content {
+            transform: translateY(0);
+        }
+
+        .card:hover .content>*:not(.title),
+        .card:focus-within .content>*:not(.title) {
+            opacity: 1;
+            transform: translateY(0);
+            transition-delay: calc(var(--d) / 8);
+        }
+
+        .card:focus-within:before,
+        .card:focus-within:after,
+        .card:focus-within .content,
+        .card:focus-within .content>*:not(.title) {
+            transition-duration: 0s;
+        }
+    }
+
+    .councellingDiv {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: #ccdbf5;
+    padding: 22px
+    }
+
+    .councellingForm{
+        width: 55%;
+    border: 1px solid;
+    border-radius: 17px;
+    padding: 18px;
+    background-color: #004c56;
+    color: white;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+
+<!-- Message Modal -->
+{% for message in messages %}
+<!-- <script>
+    document.getElementById('message_btn').click();
+</script> -->
+
+
+<!-- Button trigger modal -->
+<button type="button" style="display: none;" id="message_btn" class="btn btn-primary" data-toggle="modal"
+    data-target="#staticBackdrop">
+    Launch static backdrop modal
+</button>
+
+
+
+<!-- Message Modal -->
+<div class="modal fade" id="messageModal" data-backdrop="static" data-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Message</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h5>
+                    <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+                        <strong>Message: </strong> {{message}}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </h5>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<div class="row mt-3">
+    <div class="col-4"></div>
+    <div class="col-8" style="display: flex; justify-content: center;">
+        <h2>Hot courses for Higher Studies!</h2>
+    </div>
+</div>
+
+<!-- Top 5 Courses Code -->
+<div class="row">
+    <div class="col-4 listImage">
+        <img src="/static/top.jpg" style=" width: 442px; margin-left: 120px;" alt="">
+    </div>
+    <div class="col-8 list">
+        <div class="card-wrapper flip-down">
+            <div class="card-list">
+                <div class="front">Information Systems</div>
+                <a href="https://en.wikipedia.org/wiki/Master_of_Science_in_Information_Systems" target="_blank">
+                    <div class="back">Learn More</div>
+                </a>
+            </div>
+        </div>
+        <div class="card-wrapper flip-down">
+            <div class="card-list">
+                <div class="front">Marketing</div>
+                <a href="https://en.wikipedia.org/wiki/Master_of_Science_in_Marketing" target="_blank">
+                    <div class="back">Learn More</div>
+                </a>
+            </div>
+        </div>
+        <div class="card-wrapper flip-down">
+            <div class="card-list">
+                <div class="front">Finance</div>
+                <a href="https://en.wikipedia.org/wiki/Master_of_Finance" target="_blank">
+                    <div class="back">Learn More</div>
+                </a>
+            </div>
+        </div>
+        <div class="card-wrapper flip-down">
+            <div class="card-list">
+                <div class="front">Political Science</div>
+                <a href="https://en.wikipedia.org/wiki/Political_science" target="_blank">
+                    <div class="back">Learn More</div>
+                </a>
+            </div>
+        </div>
+        <div class="card-wrapper flip-down">
+            <div class="card-list">
+                <div class="front">Computer Science</div>
+                <a href="https://en.wikipedia.org/wiki/Master_of_Science_in_Information_Technology" target="_blank">
+                    <div class="back">Learn More</div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Top Universities Code -->
+<div class="container-fluid mt-5">
+    <h2 style="text-align: center;">Top Universities in World</h2>
+    <main class="page-content">
+        <div class="card">
+            <div class="content">
+                <h2 class="title">University of Washington</h2>
+                <p class="copy">Develope yourselves with us. Explore the cosmos of knowledge of education</p>
+                <a href="https://www.washington.edu/" target="_blank">
+                    <button class="btn">Details</button>
+                </a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="content">
+                <h2 class="title">University of Toronto</h2>
+                <p class="copy">Develope yourselves with us. Explore the cosmos of knowledge of education</p>
+                <a href="https://www.utoronto.ca/" target="_blank">
+                    <button class="btn">Details</button>
+                </a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="content">
+                <h2 class="title">Cambridge University</h2>
+                <p class="copy">Develope yourselves with us. Explore the cosmos of knowledge of education</p>
+                <a href="https://www.cam.ac.uk/" target="_blank">
+                    <button class="btn">Details</button>
+                </a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="content">
+                <h2 class="title">Stanford University</h2>
+                <p class="copy">Develope yourselves with us. Explore the cosmos of knowledge of education</p>
+                <a href="https://www.stanford.edu/" target="_blank">
+                    <button class="btn">Details</button>
+                </a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="content">
+                <h2 class="title">Oxford University</h2>
+                <p class="copy">Develope yourselves with us. Explore the cosmos of knowledge of education</p>
+                <a href="https://www.ox.ac.uk/" target="_blank">
+                    <button class="btn">Details</button>
+                </a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="content">
+                <h2 class="title">MIT</h2>
+                <p class="copy">Develope yourselves with us. Explore the cosmos of knowledge of education</p>
+                <a href="https://www.mit.edu/" target="_blank">
+                    <button class="btn">Details</button>
+                </a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="content">
+                <h2 class="title">IIT Roorkee</h2>
+                <p class="copy">Develope yourselves with us. Explore the cosmos of knowledge of education</p>
+                <a href="https://www.iitr.ac.in/" target="_blank">
+                    <button class="btn">Details</button>
+                </a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="content">
+                <h2 class="title">Melbourn University</h2>
+                <p class="copy">Develope yourselves with us. Explore the cosmos of knowledge of education</p>
+                <a href="https://www.unimelb.edu.au/" target="_blank">
+                    <button class="btn">Details</button>
+                </a>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Video Player Code -->
+<div class="container mt-5" style="text-align: center;">
+    <div class="row">
+        <div class="col-8">
+            <iframe width="100%" height="400" src="https://www.youtube.com/embed/wFq0NhUcQvA">
+            </iframe>
+        </div>
+        <div class="col-4" style="display: flex;justify-content: center; align-items: center">
+            <img src="/static/comment.png" width="300" alt="">
+            <h3 style="position: absolute;width: 95px;">Chances of Studying Abroad</h3>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Councelling Code -->
+<div class="container-fluid mt-5 councellingDiv">
+    <h2>Book Your Session Now!</h2>
+    <h4>Get the Best advice from our experts for higher studies</h4>
+    <form class="row g-3 councellingForm" action="/college/councelling/" method="POST">{% csrf_token %}
+        <div class="col-md-6">
+            <label for="inputEmail4" class="form-label">Name</label>
+            <input type="text" class="form-control" name="name" id="inputEmail4">
+        </div>
+        <div class="col-md-6">
+            <label for="inputPassword4" class="form-label">Email</label>
+            <input type="email" class="form-control" name="email" id="inputPassword4">
+        </div>
+        <div class="col-md-6">
+            <label for="inputCity" class="form-label">City</label>
+            <input type="text" class="form-control" name="city"  id="inputCity">
+        </div>
+        <div class="col-md-4">
+            <label for="inputState" class="form-label">State</label>
+            <input type="text" class="form-control" name="state"  id="inputCity">
+        </div>
+
+
+        <div class="col-md-6">
+            <label for="inputEmail4" class="form-label">Present/Passed Course</label>
+            <input type="text" class="form-control" name="course"  id="inputEmail4">
+        </div>
+
+        <div class="col-md-6">
+            <label for="inputZip" class="form-label">Country</label>
+            <input type="text" class="form-control" name="country"  id="inputZip">
+        </div>
+
+        <div class="col-12">
+            <div class="form-group">
+                <label for="exampleFormControlTextarea1">Any Special Query</label>
+                <textarea class="form-control" name="query"  id="exampleFormControlTextarea1" rows="3"></textarea>
+              </div>
+        </div>
+
+        <div class="col-md-6">
+            <label for="inputEmail4" class="form-label">Book Date</label>
+            <input type="date" class="form-control" name="date" id="inputEmail4">
+        </div>
+
+        <div class="col-md-6">
+            <label for="inputZip" class="form-label">Boot Time</label>
+            <input type="time" class="form-control" name="time" id="inputZip">
+        </div>
+
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Book Now</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
